@@ -75,6 +75,9 @@ dependencies {
     // DataStore (salvar perfis)
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
+    // SavedState (necessário para OverlayService implementar SavedStateRegistryOwner)
+    implementation("androidx.savedstate:savedstate-ktx:1.2.1")
+
     // Core
     implementation("androidx.core:core-ktx:1.12.0")
 
