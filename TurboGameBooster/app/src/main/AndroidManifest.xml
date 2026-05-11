@@ -7,7 +7,7 @@
         android:name=".TurboApplication"
         android:allowBackup="true"
         android:label="Turbo Booster"
-        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+        android:theme="@android:style/Theme.Black.NoTitleBar">
         <activity
             android:name=".MainActivity"
             android:exported="true"
