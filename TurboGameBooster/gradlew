@@ -1,3 +1,74 @@
 #!/bin/sh
-GRADLE_OPTS="${GRADLE_OPTS:-}"
-exec /opt/gradle/bin/gradle "$@"
+#
+# Gradle wrapper script for POSIX systems.
+#
+
+# Resolve APP_HOME (follow symlinks)
+app_path=$0
+while [ -h "$app_path" ]; do
+    ls=$( ls -ld "$app_path" )
+    link=${ls#*' -> '}
+    case $link in
+        /*) app_path=$link ;;
+        *)  app_path=$( dirname "$app_path" )/$link ;;
+    esac
+done
+APP_HOME=$( cd "$( dirname "$app_path" )" && pwd -P )
+
+APP_NAME="Gradle"
+APP_BASE_NAME=${0##*/}
+DEFAULT_JVM_OPTS='"-Xmx64m" "-Xms64m"'
+MAX_FD=maximum
+
+warn()  { echo "$*" >&2; }
+die()   { echo; echo "$*" >&2; echo; exit 1; }
+
+# OS detection
+cygwin=false; darwin=false; msys=false; nonstop=false
+case "$( uname )" in
+    CYGWIN*)  cygwin=true  ;;
+    Darwin*)  darwin=true  ;;
+    MSYS*|MINGW*) msys=true ;;
+    NONSTOP*) nonstop=true ;;
+esac
+
+CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
+
+# Locate java
+if [ -n "$JAVA_HOME" ]; then
+    if [ -x "$JAVA_HOME/jre/sh/java" ]; then
+        JAVACMD=$JAVA_HOME/jre/sh/java
+    else
+        JAVACMD=$JAVA_HOME/bin/java
+    fi
+    [ ! -x "$JAVACMD" ] && die "ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME"
+else
+    JAVACMD=java
+    command -v java >/dev/null 2>&1 || die "ERROR: JAVA_HOME not set and 'java' not found in PATH."
+fi
+
+# Raise file descriptor limit
+if ! "$cygwin" && ! "$darwin" && ! "$nonstop"; then
+    case $MAX_FD in
+        max*) MAX_FD=$( ulimit -H -n 2>/dev/null ) || warn "Could not query max FD limit" ;;
+    esac
+    case $MAX_FD in
+        ''|soft) ;;
+        *) ulimit -n "$MAX_FD" 2>/dev/null || warn "Could not set max FD limit to $MAX_FD" ;;
+    esac
+fi
+
+# Cygwin/MSYS path conversion
+if "$cygwin" || "$msys"; then
+    APP_HOME=$( cygpath --path --mixed "$APP_HOME" )
+    CLASSPATH=$( cygpath --path --mixed "$CLASSPATH" )
+    JAVACMD=$( cygpath --unix "$JAVACMD" )
+fi
+
+# Build and exec
+eval "set -- $DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS"
+exec "$JAVACMD" "$@" \
+    "-Dorg.gradle.appname=$APP_BASE_NAME" \
+    -classpath "$CLASSPATH" \
+    org.gradle.wrapper.GradleWrapperMain \
+    "$@"
