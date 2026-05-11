@@ -90,11 +90,11 @@ fun OverlayScreen(viewModel: MainViewModel) {
                         ) {
                             if (mostrarFps) {
                                 OverlayMetrica("$fps", "FPS", VerdeNeon)
-                                Divider(modifier = Modifier.width(1.dp).height(20.dp), color = Color(0xFF333333))
+                                Box(modifier = Modifier.width(1.dp).height(20.dp).background(Color(0xFF333333)))
                             }
                             if (mostrarCpu) {
                                 OverlayMetrica("${cpu.usoTotal.toInt()}%", "CPU", AzulNeon)
-                                Divider(modifier = Modifier.width(1.dp).height(20.dp), color = Color(0xFF333333))
+                                Box(modifier = Modifier.width(1.dp).height(20.dp).background(Color(0xFF333333)))
                             }
                             if (mostrarTemp) {
                                 val corTemp = when {
@@ -106,7 +106,7 @@ fun OverlayScreen(viewModel: MainViewModel) {
                             }
                             if (mostrarRam) {
                                 if (mostrarFps || mostrarCpu || mostrarTemp) {
-                                    Divider(modifier = Modifier.width(1.dp).height(20.dp), color = Color(0xFF333333))
+                                    Box(modifier = Modifier.width(1.dp).height(20.dp).background(Color(0xFF333333)))
                                 }
                                 OverlayMetrica("RAM", "MB", VioletaNeon)
                             }

@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
 import rikka.shizuku.Shizuku
-import rikka.shizuku.ShizukuRemoteProcess
 
 object ShizukuManager {
 
@@ -86,7 +85,7 @@ object ShizukuManager {
         }
 
         return@withContext try {
-            val processo = ShizukuRemoteProcess.exec(arrayOf("sh", "-c", comando), null, null)
+            val processo = Shizuku.newProcess(arrayOf("sh", "-c", comando), null, null)
             val saida = processo.inputStream.bufferedReader().readText()
             val erro = processo.errorStream.bufferedReader().readText()
             val codigoSaida = processo.waitFor()

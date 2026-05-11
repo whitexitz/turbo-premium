@@ -14,22 +14,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.turbobooster.engine.OptimizationEngine
 import com.turbobooster.shizuku.ShizukuStatus
 import com.turbobooster.ui.theme.*
 import com.turbobooster.viewmodel.MainViewModel
-import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.foundation.Canvas
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.PI
 
 @Composable
 fun HomeScreen(viewModel: MainViewModel) {
@@ -195,7 +191,7 @@ fun HomeScreen(viewModel: MainViewModel) {
                         fontSize = 11.sp,
                         fontWeight = if (selecionado) FontWeight.Bold else FontWeight.Normal,
                         modifier = Modifier.padding(vertical = 10.dp, horizontal = 4.dp),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        textAlign = TextAlign.Center
                     )
                 }
             }
@@ -409,7 +405,7 @@ private fun CardGrafico(
                     .height(40.dp)
             ) {
                 if (historico.size < 2) return@Canvas
-                val max = historico.max().takeIf { it > 0f } ?: 1f
+                val max = (historico.maxOrNull() ?: 0f).takeIf { it > 0f } ?: 1f
                 val w = size.width
                 val h = size.height
                 val step = w / (historico.size - 1)
