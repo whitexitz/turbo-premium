@@ -9,6 +9,7 @@ import com.turbobooster.engine.OptimizationEngine
 import com.turbobooster.monitor.*
 import com.turbobooster.service.OverlayService
 import com.turbobooster.shizuku.ShizukuManager
+import com.turbobooster.shizuku.ShizukuStatus
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
@@ -31,6 +32,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     init {
         cpu.iniciar(); ram.iniciar(); thermal.iniciar(); fps.iniciar()
         coletarDados()
+        coletarShizuku()
     }
 
     private fun coletarDados() {
@@ -48,6 +50,16 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                     historicoTemp = (_state.value.historicoTemp + t).takeLast(30)
                 )
             }.collect { _state.value = it }
+        }
+    }
+
+    private fun coletarShizuku() {
+        viewModelScope.launch {
+            ShizukuManager.status.collect { status ->
+                _state.value = _state.value.copy(
+                    shizukuConectado = status == ShizukuStatus.CONECTADO
+                )
+            }
         }
     }
 

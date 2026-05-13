@@ -13,6 +13,7 @@ data class AppState(
     val turboAtivo: Boolean = false,
     val otimizando: Boolean = false,
     val ultimoBoost: OptimizationEngine.BoostResult? = null,
+    val shizukuConectado: Boolean = false,
     val historicoCpu: List<Float> = List(30) { 0f },
     val historicoRam: List<Float> = List(30) { 0f },
     val historicoFps: List<Int> = List(30) { 0 },

@@ -13,14 +13,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
+import com.turbobooster.data.AppState
 import com.turbobooster.ui.theme.*
 
 @Composable
 fun OtimizarScreen(
+    state: AppState,
     onLimparCache: () -> Unit,
     onLiberarRam: () -> Unit,
     onMatar: () -> Unit,
     onRestaurar: () -> Unit,
+    onConectarShizuku: () -> Unit,
     mensagem: String?
 ) {
     Column(
@@ -30,9 +33,77 @@ fun OtimizarScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("OTIMIZAÇÕES", color = NeonGreen, fontSize = 14.sp,
-            fontWeight = FontWeight.Black, letterSpacing = 3.sp)
+        Text(
+            "OTIMIZAÇÕES", color = NeonGreen, fontSize = 14.sp,
+            fontWeight = FontWeight.Black, letterSpacing = 3.sp
+        )
 
+        // Shizuku status badge
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    if (state.shizukuConectado) NeonGreen.copy(alpha = 0.08f) else NeonRed.copy(alpha = 0.08f),
+                    RoundedCornerShape(10.dp)
+                )
+                .border(
+                    1.dp,
+                    if (state.shizukuConectado) NeonGreen.copy(alpha = 0.3f) else NeonRed.copy(alpha = 0.3f),
+                    RoundedCornerShape(10.dp)
+                )
+                .padding(horizontal = 14.dp, vertical = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(if (state.shizukuConectado) "●" else "●",
+                    color = if (state.shizukuConectado) NeonGreen else NeonRed, fontSize = 10.sp)
+                Column {
+                    Text(
+                        "Shizuku: ${if (state.shizukuConectado) "Conectado" else "Desconectado"}",
+                        color = if (state.shizukuConectado) NeonGreen else NeonRed,
+                        fontSize = 12.sp, fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        if (state.shizukuConectado) "Comandos privilegiados disponíveis"
+                        else "Sem Shizuku: otimizações limitadas",
+                        color = TextSecondary, fontSize = 10.sp
+                    )
+                }
+            }
+            if (!state.shizukuConectado) {
+                TextButton(
+                    onClick = onConectarShizuku,
+                    contentPadding = PaddingValues(horizontal = 8.dp)
+                ) {
+                    Text("CONECTAR", color = NeonBlue, fontSize = 10.sp,
+                        fontWeight = FontWeight.Black, letterSpacing = 1.sp)
+                }
+            }
+        }
+
+        // RAM info card
+        if (state.ramTotalMB > 0) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(BgCard, RoundedCornerShape(10.dp))
+                    .border(1.dp, BorderNeon, RoundedCornerShape(10.dp))
+                    .padding(14.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                RamStat("TOTAL", "${state.ramTotalMB} MB", TextSecondary)
+                Box(modifier = Modifier.width(1.dp).fillMaxHeight().background(BorderNeon))
+                RamStat("USADA", "${state.ramUsadaMB} MB", NeonPurple)
+                Box(modifier = Modifier.width(1.dp).fillMaxHeight().background(BorderNeon))
+                RamStat("LIVRE", "${state.ramTotalMB - state.ramUsadaMB} MB", NeonGreen)
+            }
+        }
+
+        // Message feedback
         AnimatedVisibility(visible = mensagem != null) {
             Box(
                 modifier = Modifier
@@ -49,6 +120,14 @@ fun OtimizarScreen(
         AcaoBtn("💾", "Liberar RAM", "Fecha processos desnecessários em background", NeonPurple, onLiberarRam)
         AcaoBtn("⚡", "Matar Background", "Encerra todos os apps não essenciais via Shizuku", NeonGreen, onMatar)
         AcaoBtn("↩", "Restaurar Sistema", "Reativa animações e configurações padrão", NeonOrange, onRestaurar)
+    }
+}
+
+@Composable
+private fun RamStat(label: String, valor: String, cor: Color) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        Text(valor, color = cor, fontSize = 13.sp, fontWeight = FontWeight.Black)
+        Text(label, color = TextSecondary, fontSize = 9.sp, letterSpacing = 1.sp)
     }
 }
 
